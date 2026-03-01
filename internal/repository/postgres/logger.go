@@ -19,7 +19,7 @@ func NewLoggerRepository(db *pgxpool.Pool) *LoggerRepository {
 }
 
 func (r *LoggerRepository) GetLogByProject(context context.Context, projectId string) ([]model.Log, error) {
-	rows, err := r.db.Query(context, "SELECT message, created_at FROM logs WHERE project_id = $1 ORDER BY created_at")
+	rows, err := r.db.Query(context, "SELECT id, type, message, created_at FROM logs.logs WHERE project_id = $1 ORDER BY created_at", projectId)
 
 	if err != nil {
 		return nil, err
@@ -30,7 +30,7 @@ func (r *LoggerRepository) GetLogByProject(context context.Context, projectId st
 	for rows.Next() {
 		var log model.Log
 
-		rows.Scan(&log.Message, &log.CreatedAt)
+		rows.Scan(&log.Identifier, &log.Type, &log.Message, &log.CreatedAt)
 
 		logs = append(logs, log)
 	}

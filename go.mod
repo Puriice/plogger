@@ -4,7 +4,7 @@ go 1.25.6
 
 require (
 	github.com/jackc/pgx/v5 v5.8.0
-	github.com/puriice/httplibs v1.3.2
+	github.com/puriice/httplibs v1.3.4
 )
 
 require (

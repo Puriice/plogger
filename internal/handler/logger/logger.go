@@ -20,6 +20,25 @@ func NewHandler(repo repository.LoggerRepository) *Handler {
 	}
 }
 
+func (h *Handler) GetLogs(w http.ResponseWriter, r *http.Request) {
+	projectID := r.PathValue("projectID")
+
+	logs, err := h.repo.GetLogByProject(r.Context(), projectID)
+
+	err = pgutils.CheckError(err, w)
+
+	if err != nil {
+		return
+	}
+
+	if len(logs) == 0 {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	json.SendJSON(w, http.StatusOK, logs)
+}
+
 func (h *Handler) CreateLog(w http.ResponseWriter, r *http.Request) {
 	projectID := r.PathValue("projectID")
 
@@ -48,7 +67,6 @@ func (h *Handler) CreateLog(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) RegisterRoute(router *http.ServeMux) {
-	router.HandleFunc("/", h.CreateLog)
-
+	router.HandleFunc("GET /logs/{projectID}", h.GetLogs)
 	router.HandleFunc("POST /logs/{projectID}", h.CreateLog)
 }
