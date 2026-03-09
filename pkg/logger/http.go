@@ -3,6 +3,7 @@ package logger
 import (
 	"net/http"
 
+	"github.com/puriice/golibs/pkg/middleware"
 	"github.com/puriice/golibs/pkg/server"
 	"github.com/puriice/plogger/internal/handler/logger"
 	"github.com/puriice/plogger/internal/repository"
@@ -18,5 +19,5 @@ func RegisterRoute(s *server.Server) {
 	mux := http.NewServeMux()
 	mux.Handle("/api/v1/", http.StripPrefix("/api/v1", router))
 
-	s.Handler = mux
+	s.Handler = middleware.Logger(mux)
 }
