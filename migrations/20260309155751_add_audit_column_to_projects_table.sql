@@ -1,0 +1,12 @@
+-- +goose Up
+SELECT 'up SQL query';
+ALTER TABLE projects
+ADD COLUMN updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+
+-- +goose Down
+SELECT 'down SQL query';
+ALTER TABLE projects
+DROP COLUMN updated_at,
+DROP COLUMN created_at;

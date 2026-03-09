@@ -12,13 +12,13 @@ type PostgresLoggerRepository struct {
 	db *pgxpool.Pool
 }
 
-func NewPostgresLoggerRepository(db *pgxpool.Pool) *PostgresLoggerRepository {
-	return &PostgresLoggerRepository{
+func NewPostgresLoggerRepository(db *pgxpool.Pool) PostgresLoggerRepository {
+	return PostgresLoggerRepository{
 		db: db,
 	}
 }
 
-func (r *PostgresLoggerRepository) GetLogByProject(context context.Context, projectId string) ([]model.Log, error) {
+func (r PostgresLoggerRepository) GetLogByProject(context context.Context, projectId string) ([]model.Log, error) {
 	rows, err := r.db.Query(context, "SELECT id, type, message, created_at FROM logs WHERE project_id = $1 ORDER BY created_at", projectId)
 
 	if err != nil {
@@ -42,7 +42,7 @@ func (r *PostgresLoggerRepository) GetLogByProject(context context.Context, proj
 	return logs, nil
 }
 
-func (r *PostgresLoggerRepository) CreateLog(context context.Context, projectId string, msgType string, message string) error {
+func (r PostgresLoggerRepository) CreateLog(context context.Context, projectId string, msgType string, message string) error {
 	cmdTag, err := r.db.Exec(context, "INSERT INTO logs (project_id, type, message) VALUES ($1, $2, $3)", projectId, msgType, message)
 
 	if err != nil {
