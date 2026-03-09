@@ -3,8 +3,8 @@ package logger
 import (
 	"net/http"
 
-	"github.com/puriice/httplibs/pkg/json"
-	"github.com/puriice/httplibs/pkg/pgutils"
+	"github.com/puriice/golibs/pkg/json"
+	"github.com/puriice/golibs/pkg/pgutils"
 	"github.com/puriice/plogger/internal/constant"
 	"github.com/puriice/plogger/internal/model"
 	"github.com/puriice/plogger/internal/repository"

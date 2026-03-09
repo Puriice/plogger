@@ -3,15 +3,15 @@ package logger
 import (
 	"net/http"
 
-	"github.com/puriice/httplibs/pkg/server"
+	"github.com/puriice/golibs/pkg/server"
 	"github.com/puriice/plogger/internal/handler/logger"
-	"github.com/puriice/plogger/internal/repository/postgres"
+	"github.com/puriice/plogger/internal/repository"
 )
 
 func RegisterRoute(s *server.Server) {
 	router := http.NewServeMux()
 
-	loggerRepo := postgres.NewLoggerRepository(s.Database)
+	loggerRepo := repository.NewPostgresLoggerRepository(s.Database)
 	loggerHandler := logger.NewHandler(loggerRepo)
 	loggerHandler.RegisterRoute(router)
 

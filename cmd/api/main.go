@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 
-	"github.com/puriice/httplibs/pkg/db"
-	"github.com/puriice/httplibs/pkg/env"
-	"github.com/puriice/httplibs/pkg/server"
+	"github.com/puriice/golibs/pkg/db"
+	"github.com/puriice/golibs/pkg/env"
+	"github.com/puriice/golibs/pkg/server"
 	"github.com/puriice/plogger/pkg/logger"
 )
 
