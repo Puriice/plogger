@@ -12,19 +12,28 @@ import (
 	"github.com/puriice/golibs/pkg/messaging"
 	"github.com/puriice/golibs/pkg/server"
 	"github.com/puriice/plogger/pkg/logger"
+	"github.com/puriice/plogger/pkg/sdk/plog"
 	"github.com/puriice/pproject/pkg/sdk/pproject"
 )
 
 func main() {
 	env.Init()
 
-	projectBroker, err := messaging.NewRabbitMQ(env.Get("amqp_url", "amqp://guest:guest@localhost/"), pproject.ExchangeName)
+	rabbit, err := messaging.NewRabbitMQ(env.Get("amqp_url", "amqp://guest:guest@localhost/"))
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	defer projectBroker.Shutdown()
+	defer rabbit.Shutdown()
+
+	projectBroker, err := rabbit.Broker(pproject.ExchangeName)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	loggerBroker, err := rabbit.Broker(plog.ExchangeName)
 
 	projectService := pproject.NewService("", projectBroker)
 
@@ -44,10 +53,16 @@ func main() {
 	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
 
 	go func() {
-		if err := logger.SubscribeToProject(ctx, projectService, database); err != nil {
+		if err := logger.SubscribeToProject(ctx, &projectService, database); err != nil {
 			log.Println(err)
 		}
 	}()
+	go func() {
+		if err := logger.SubscribeToLogs(ctx, loggerBroker, database); err != nil {
+			log.Println(err)
+		}
+	}()
+
 	go func() {
 		<-sig
 

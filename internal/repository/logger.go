@@ -5,7 +5,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/puriice/golibs/pkg/pgutils"
-	"github.com/puriice/plogger/internal/model"
+	"github.com/puriice/plogger/pkg/sdk/plog"
 )
 
 type PostgresLoggerRepository struct {
@@ -18,17 +18,17 @@ func NewPostgresLoggerRepository(db *pgxpool.Pool) PostgresLoggerRepository {
 	}
 }
 
-func (r PostgresLoggerRepository) GetLogByProject(context context.Context, projectId string) ([]model.Log, error) {
+func (r PostgresLoggerRepository) GetLogByProject(context context.Context, projectId string) ([]plog.Log, error) {
 	rows, err := r.db.Query(context, "SELECT id, type, message, created_at FROM logs WHERE project_id = $1 ORDER BY created_at", projectId)
 
 	if err != nil {
 		return nil, err
 	}
 
-	logs := make([]model.Log, 0)
+	logs := make([]plog.Log, 0)
 
 	for rows.Next() {
-		var log model.Log
+		var log plog.Log
 
 		rows.Scan(&log.Identifier, &log.Type, &log.Message, &log.CreatedAt)
 

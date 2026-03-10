@@ -6,8 +6,8 @@ import (
 	"github.com/puriice/golibs/pkg/json"
 	"github.com/puriice/golibs/pkg/pgutils"
 	"github.com/puriice/plogger/internal/constant"
-	"github.com/puriice/plogger/internal/model"
 	"github.com/puriice/plogger/internal/repository"
+	"github.com/puriice/plogger/pkg/sdk/plog"
 )
 
 type Handler struct {
@@ -42,7 +42,7 @@ func (h *Handler) GetLogs(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) CreateLog(w http.ResponseWriter, r *http.Request) {
 	projectID := r.PathValue("projectID")
 
-	payload := new(model.Log)
+	payload := new(plog.Log)
 
 	err := json.ParseJSON(r, payload)
 

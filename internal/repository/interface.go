@@ -4,10 +4,11 @@ import (
 	"context"
 
 	"github.com/puriice/plogger/internal/model"
+	"github.com/puriice/plogger/pkg/sdk/plog"
 )
 
 type LoggerRepository interface {
-	GetLogByProject(context context.Context, projectId string) ([]model.Log, error)
+	GetLogByProject(context context.Context, projectId string) ([]plog.Log, error)
 	CreateLog(context context.Context, projectId string, msgType string, message string) error
 }
 
